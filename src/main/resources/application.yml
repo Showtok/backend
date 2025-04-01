@@ -1,0 +1,38 @@
+jwt:
+  secret: mySuperSecureAndLongJwtSecretKeyWithMinimum64Characters1234567890!!!
+  expiration: ${JWT_EXPIRATION:86400000} # ??? 1?
+
+spring:
+  web:
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - profile
+              - email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/showtok?serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
