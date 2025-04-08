@@ -1,6 +1,6 @@
 jwt:
   secret: mySuperSecureAndLongJwtSecretKeyWithMinimum64Characters1234567890!!!
-  expiration: ${JWT_EXPIRATION:86400000} # ??? 1?
+  expiration: ${JWT_EXPIRATION:86400000} # 1일 = 86400000ms
 
 spring:
   web:
@@ -28,7 +28,7 @@ spring:
             user-name-attribute: sub
 
   datasource:
-    url: jdbc:mysql://localhost:3306/showtok?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/showtok?serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
