@@ -29,6 +29,7 @@ public class Message {
 
     private LocalDateTime sentAt;
 
+    @Column(name = "`read`")
     private boolean read;
 
     private boolean deletedBySender;
