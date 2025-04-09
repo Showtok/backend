@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
+
 
     public void signup(UserSignupDTO dto) {
         if (userRepository.existsByUsername(dto.getUsername())) {
@@ -76,4 +79,28 @@ public class UserService {
 
         user.setCredit(user.getCredit() + 1); // 광고 시청 시 1크레딧 추가
     }
+    public String loginOrRegisterGoogleUser(String email, String googleName) {
+        User user = userRepository.findByUsername(email).orElse(null);
+
+        if (user == null) {
+            Role role = roleRepository.findByName("ROLE_USER")
+                    .orElseThrow(() -> new RuntimeException("기본 ROLE_USER가 존재하지 않습니다."));
+
+            user = User.builder()
+                    .username(email)
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .nickname(googleName)
+                    .phone("000-0000-0000")
+                    .credit(0)
+                    .roles(Set.of(role))
+                    .build();
+
+            userRepository.save(user);
+        }
+
+        // ✅ Authentication 없이도 토큰 생성 가능
+        return tokenProvider.createToken(user.getUsername());
+    }
+
+
 }
